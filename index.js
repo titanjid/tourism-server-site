@@ -22,6 +22,7 @@ async function run() {
         const database = client.db("BusCriket");
         const allCriketServices = database.collection("allCriketServices");
         const specialOffer = database.collection("specialOffer");
+        const drivers = database.collection("driver");
 
 
         app.get('/allTicket', async (req, res) => {
@@ -33,6 +34,11 @@ async function run() {
             const cursor = specialOffer.find({});
             const Offer = await cursor.toArray();
             res.send(Offer);
+        });
+        app.get('/driver', async (req, res) => {
+            const cursor = drivers.find({});
+            const driver = await cursor.toArray();
+            res.send(driver);
         });
 
     }
