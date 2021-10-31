@@ -39,11 +39,18 @@ async function run() {
             const driver = await cursor.toArray();
             res.send(driver);
         });
+        
         app.get('/allTicket/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const allTicket = await allTriketServices.findOne(query);
             res.json(allTicket);
+        })
+        app.get('/SpecialOffer/:offerId', async (req, res) => {
+            const id = req.params.offerId;
+            const query = { _id: ObjectId(id)};
+            const Offers = await specialOffer.findOne(query);
+            res.json(Offers);
         })
 
         app.post('/allTicket', async (req, res) => {
