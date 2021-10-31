@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors');
 const app = express()
 const port = process.env.PORT || 5000
-
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config();
 
 
@@ -14,19 +14,18 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.xmfj9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-
 async function run() {
     try{
         await client.connect();
 
         const database = client.db("BusCriket");
-        const allCriketServices = database.collection("allCriketServices");
+        const allTriketServices = database.collection("allCriketServices");
         const specialOffer = database.collection("specialOffer");
         const drivers = database.collection("driver");
 
 
         app.get('/allTicket', async (req, res) => {
-            const cursor = allCriketServices.find({});
+            const cursor = allTriketServices.find({});
             const allTicket = await cursor.toArray();
             res.send(allTicket);
         });
@@ -39,6 +38,18 @@ async function run() {
             const cursor = drivers.find({});
             const driver = await cursor.toArray();
             res.send(driver);
+        });
+        app.get('/allTicket/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const allTicket = await allTriketServices.findOne(query);
+            res.json(allTicket);
+        })
+
+        app.post('/allTicket', async (req, res) => {
+            const addTickets = req.body;
+            const result = await allTriketServices.insertOne(addTickets);
+            res.json(result)
         });
 
     }
